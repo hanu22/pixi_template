@@ -1,0 +1,122 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "repo-name"
+description = ""
+version = "1.0"
+readme = "README.md"
+requires-python = "==3.9.*"
+
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "docker",
+    "ipykernel",
+    "ipython",
+    "ipywidgets",
+    "locust",
+    "matplotlib",
+    "missingno",
+    "pre-commit",
+    "pyodbc",
+    "pyyaml",
+    "ruff",
+    "scipy",
+    "seaborn",
+    "spacy_streamlit",
+    "sqlalchemy",
+    "sqlfluff",
+    "streamlit",
+    "thefuzz",
+    "toml",
+    "wordcloud",
+]
+
+training = [
+    "azureml-fsspec",
+    "cupy-cuda12x",
+    "pandas==2.2.1",
+    "spacy-lookups-data",
+    "spacy-transformers",
+    "spacy==3.7.5",
+]
+
+inference = [
+    "azure-ai-ml",
+    "azure-identity",
+    "azure-storage-blob",
+    "azureml-contrib-services",
+    "azureml-inference-server-http",
+    "cupy-cuda12x",
+    "ftfy",
+    "pydantic>=2.0",
+    "python-dotenv",
+    "requests",
+    "spacy-lookups-data",
+    "spacy-transformers",
+    "spacy==3.7.5",
+    "tenacity",
+]
+
+features = [
+    "datasketch",
+    "ftfy",
+    "openpyxl",
+    "pandas==2.2.1",
+    "pymysql",
+    "pyodbc",
+    "requests",
+    "scikit-learn",
+    "spacy==3.7.5",
+    "sqlalchemy",
+    "tenacity",
+    "tqdm",
+    "xlrd",
+]
+
+[tool.pip-tools.compile]
+generate-hashes = false
+allow-unsafe = true
+resolver-name = "backtracking"
+
+[tool.ruff]
+line-length = 88
+indent-width = 4
+extend-include = ["*.ipynb"]
+
+[tool.ruff.lint]
+select = ["E", "F", "D", "I"]
+ignore = [
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "D105",
+    "D106",
+    "D107",
+    "D206",
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = false
+
+[tool.sqlfluff.core]
+dialect = "tsql"
+templater = "placeholder"
+exclude_rules = "L016,L031,CP02"
+max_line_length = 88
+
+[tool.sqlfluff.templater.placeholder]
+param_style = "colon"
+from_date = "0000/00/00"
+to_date = "0000/00/00"
+market_id = "0"

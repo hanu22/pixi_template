@@ -1,0 +1,20 @@
+parameters:
+  - name: endpointName
+    type: string
+
+steps:
+
+- task: AzureCLI@2
+  displayName: 'Delete Deployment'
+  inputs:
+    connectedServiceNameARM: $(serviceConnection)
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      if [ "$RELEASENEWDEPLOYMENT" = "True" ]; then
+          export deploymentToBeDeleted="$OLDDEPLOYMENTNAME"
+      else
+          export deploymentToBeDeleted="$NEWDEPLOYMENTNAME"
+      fi
+      echo "Deployment to be deleted is $deploymentToBeDeleted"
+      python ado/scripts/deployment_delete.py -s $(subscriptionId) -rg $(resourceGroupName) -ws $(workspaceName) -e ${{ parameters.endpointName }} -d $deploymentToBeDeleted

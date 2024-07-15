@@ -1,0 +1,9 @@
+steps:
+
+- task: AzureCLI@2
+  displayName: 'Create AML Compute'
+  inputs:
+    connectedServiceNameARM: $(serviceConnection)
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: python ado/scripts/compute.py -s $(subscriptionId) -rg $(resourceGroupName) -ws $(workspaceName) -c $(computeName) -cs $(computeSize) -ct $(computeType) -mii $(minInstances) -mai $(maxInstances) -idle $(idleSeconds)

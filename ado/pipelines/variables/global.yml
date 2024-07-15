@@ -1,0 +1,11 @@
+variables:
+
+  poolName: 'Azure Pipelines'
+  dataStoreName: ''
+  experimentName: ''
+
+  environmentName: ''
+  modelName: ''
+  dataAssetName: ''
+
+  registryName: ''

@@ -1,0 +1,21 @@
+variables:
+
+  subscriptionId: '7df58d01-0877-4c17-8b30-125a47eafebc'
+  resourceGroupName: 'ds-xxx-dev-eun-rg'
+  workspaceName: 'ds-xxx-dev-eun-ws'
+  serviceConnection: 'Brandbank - Software Dev (7df58d01-0877-4c17-8b30-125a47eafebc)'
+
+  computeName: ''
+  computeType: ''
+  computeSize: ''
+  minInstances: 0
+  maxInstances: 1
+  idleSeconds: 120
+
+  instanceType: 'Standard_NC4as_T4_v3'
+  instanceCount: 1
+  maxConcurrency: 10
+
+  endpointName: '-dev'
+
+  TRANSLATOR_API_KEY: '3b2c862123f1485282f0f0a761178a1c'

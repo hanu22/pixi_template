@@ -1,0 +1,9 @@
+steps:
+
+- task: AzureCLI@2
+  displayName: 'Create AML Model'
+  inputs:
+    connectedServiceNameARM: $(serviceConnection)
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: python ado/scripts/model.py -s $(subscriptionId) -rg $(resourceGroupName) -ws $(workspaceName) -m $(modelName) -r $(repoName) -j $(jobNumber)

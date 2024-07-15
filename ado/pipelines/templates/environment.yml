@@ -1,0 +1,13 @@
+parameters:
+  - name: pipelineName
+    type: string
+
+steps:
+
+- task: AzureCLI@2
+  displayName: 'Create AML Environment'
+  inputs:
+    connectedServiceNameARM: $(serviceConnection)
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: python ado/scripts/environment.py -s $(subscriptionId) -rg $(resourceGroupName) -ws $(workspaceName) -env $(environmentName) -p ${{ parameters.pipelineName }}

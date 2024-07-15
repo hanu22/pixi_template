@@ -1,0 +1,9 @@
+steps:
+
+- task: AzureCLI@2
+  displayName: 'Register Model To Shared Registry'
+  inputs:
+    connectedServiceNameARM: $(serviceConnection)
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: python ado/scripts/model_shared.py -s $(subscriptionId) -rg $(resourceGroupName) -ws $(workspaceName) -m $(modelName) -rn $(registryName)

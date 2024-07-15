@@ -1,0 +1,14 @@
+parameters:
+  - name: endpointName
+    type: string
+
+steps:
+
+- task: AzureCLI@2
+  displayName: 'Get Deployment Names'
+  name: deploymentNameTask
+  inputs:
+    connectedServiceNameARM: $(serviceConnection)
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: python ado/scripts/deployment_names.py -s $(subscriptionId) -rg $(resourceGroupName) -ws $(workspaceName) -e ${{ parameters.endpointName }}

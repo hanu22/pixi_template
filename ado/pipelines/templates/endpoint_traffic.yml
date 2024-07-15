@@ -1,0 +1,17 @@
+parameters:
+  - name: endpointName
+    type: string
+
+  - name: deploymentName
+    type: string
+
+steps:
+
+- task: AzureCLI@2
+  displayName: 'Update Traffic'
+  inputs:
+    connectedServiceNameARM: $(serviceConnection)
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: python ado/scripts/endpoint_traffic.py -s $(subscriptionId) -rg $(resourceGroupName) -ws $(workspaceName) -e ${{ parameters.endpointName }} -d ${{ parameters.deploymentName }}
+  condition: eq(variables.releaseNewDeployment, 'True')

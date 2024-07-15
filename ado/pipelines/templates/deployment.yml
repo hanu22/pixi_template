@@ -1,0 +1,28 @@
+parameters:
+  - name: endpointName
+    type: string
+
+  - name: instanceType
+    type: string
+
+  - name: deploymentName
+    type: string
+
+  - name: pipelineName
+    type: string
+
+  - name: scoringDirectory
+    type: string
+
+  - name: scoringScript
+    type: string
+
+steps:
+
+- task: AzureCLI@2
+  displayName: 'Deploy Endpoint'
+  inputs:
+    connectedServiceNameARM: $(serviceConnection)
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: python ado/scripts/deployment.py -s $(subscriptionId) -rg $(resourceGroupName) -ws $(workspaceName) -m $(modelName) -env $(environmentName) -p ${{ parameters.pipelineName }} -e ${{ parameters.endpointName }} -d ${{ parameters.deploymentName }} -it ${{ parameters.instanceType }} -ic $(instanceCount) -mc $(maxConcurrency) -sd ${{ parameters.scoringDirectory }} -ss ${{ parameters.scoringScript }} -rn $(registryName)

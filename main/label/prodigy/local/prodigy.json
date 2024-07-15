@@ -1,0 +1,11 @@
+{
+    "port": 8080,
+    "host": "localhost",
+    "db": "sqlite",
+    "db_settings": {
+        "sqlite": {
+            "name": "prodigy.db",
+            "path": "./"
+        }
+    }
+}

@@ -1,0 +1,20 @@
+name: .venv
+channels:
+- conda-forge
+dependencies:
+- python=3.9
+- pip=24.0
+- pip:
+  - datasketch==1.6.4
+  - ftfy==6.2.0
+  - openpyxl==3.1.2
+  - pandas==2.2.1
+  - pymysql==1.1.0
+  - pyodbc==5.1.0
+  - requests==2.31.0
+  - scikit-learn==1.4.1.post1
+  - spacy==3.7.5
+  - sqlalchemy==2.0.29
+  - tenacity==8.2.3
+  - tqdm==4.66.2
+  - xlrd==2.0.1
