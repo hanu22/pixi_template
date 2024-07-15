@@ -1,0 +1,14 @@
+variables:
+
+  subscriptionId: '1b700a99-c88d-4adf-b758-f55683fe3113'
+  resourceGroupName: 'ds-xxx-eun-rg'
+  workspaceName: 'ds-xxx-eun-ws'
+  serviceConnection: ''
+
+  instanceType: 'Standard_NC4as_T4_v3'
+  instanceCount: 1
+  maxConcurrency: 10
+
+  endpointName: '-prod'
+
+  TRANSLATOR_API_KEY: ''

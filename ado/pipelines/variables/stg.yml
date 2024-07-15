@@ -1,0 +1,14 @@
+variables:
+
+  subscriptionId: '67abff63-4954-47c4-8bba-8d08d7648924'
+  resourceGroupName: 'ds-xxx-eun-rg'
+  workspaceName: 'ds-xxx-eun-ws'
+  serviceConnection: 'Brandbank - Software Staging (67abff63-4954-47c4-8bba-8d08d7648924)'
+
+  instanceType: 'Standard_NC4as_T4_v3'
+  instanceCount: 1
+  maxConcurrency: 10
+
+  endpointName: '-stg'
+
+  TRANSLATOR_API_KEY: ''

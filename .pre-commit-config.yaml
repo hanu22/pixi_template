@@ -1,0 +1,42 @@
+﻿repos:
+-   repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: 'v0.4.3'
+    hooks:
+    -   id: ruff
+        types_or: [ python, pyi, jupyter ]
+    -   id: ruff-format
+        types_or: [ python, pyi, jupyter ]
+-   repo: https://github.com/kynan/nbstripout
+    rev: '0.7.1'
+    hooks:
+    -   id: nbstripout
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: 'v4.6.0'
+    hooks:
+    -   id: check-ast
+    -   id: end-of-file-fixer
+    -   id: trailing-whitespace
+    -   id: check-yaml
+    -   id: check-toml
+    -   id: check-json
+-   repo: https://github.com/sqlfluff/sqlfluff
+    rev: '3.0.6'
+    hooks:
+    -   id: sqlfluff-fix
+    -   id: sqlfluff-lint
+-   repo: local
+    hooks:
+    -   id: conda-export
+        name: conda-export
+        entry: python -m conda
+        language: python
+        additional_dependencies: [toml, pyyaml]
+        pass_filenames: false
+        always_run: true
+-   repo: https://github.com/jazzband/pip-tools
+    rev: '7.4.1'
+    hooks:
+    -   id: pip-compile
+        name: pip-compile-requirements
+        args: ['--output-file=requirements.txt', 'pyproject.toml', '--all-extras']
+        files: ^(pyproject\.toml|requirements\.txt)$

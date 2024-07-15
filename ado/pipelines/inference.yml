@@ -1,0 +1,77 @@
+trigger:
+
+  tags:
+    include:
+    - dev.*
+    - stg.*
+    - prod.*
+
+variables:
+
+  - template: variables/global.yml
+
+  - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/tags/dev') }}:
+      - template: variables/dev.yml
+
+  - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/tags/stg') }}:
+      - template: variables/stg.yml
+
+  - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/tags/prod') }}:
+      - template: variables/prod.yml
+
+  - name: 'repoName'
+    value: $(Build.Repository.Name)
+
+name: $(Build.Repository.Name)-$(Build.BuildId)
+
+pool:
+  name: $(poolName)
+
+stages:
+
+- stage: deploy_aml_realtime_endpoints_stage
+  displayName: Deploy AML Realtime Endpoints Stage
+
+  jobs:
+
+  - job: setup_environment_job
+    displayName: Setup Environment Job
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/dev')
+
+    steps:
+
+    - template: templates/python.yml
+
+    # Uncomment if hasn't been registered manually
+    # - template: templates/environment.yml
+
+      # parameters:
+      #   pipelineName: 'inference'
+
+    - template: templates/environment_shared.yml
+
+      parameters:
+        pipelineName: 'inference'
+
+  - job: setup_model_job
+    displayName: Setup Model Job
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/dev')
+
+    steps:
+
+    - template: templates/python.yml
+
+    # Uncomment if hasn't been registered manually
+    # - template: templates/model.yml
+
+    - template: templates/model_shared.yml
+
+  - template: templates/endpoint_deploy_jobs.yml
+
+    parameters:
+      endpointName: ${{ variables.endpointName }}
+      instanceType: ${{ variables.instanceType }}
+      uniqueIdentifier: '1'
+      scoringDirectory: 'mlops/inference/code'
+      scoringScript: 'score.py'
+      integrationTestsPath: 'mlops/inference/tests/integration'

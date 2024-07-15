@@ -1,0 +1,16 @@
+parameters:
+  - name: modelName
+    type: string
+
+  - name: downloadPath
+    type: string
+
+steps:
+
+- task: AzureCLI@2
+  displayName: 'Downloading AML Model: ${{ parameters.modelName }} Locally'
+  inputs:
+    connectedServiceNameARM: $(serviceConnection)
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: python ado/scripts/model_download.py -s $(subscriptionId) -rg $(resourceGroupName) -ws $(workspaceName) -m ${{ parameters.modelName }} -dp ${{ parameters.downloadPath }}

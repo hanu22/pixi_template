@@ -1,0 +1,13 @@
+parameters:
+  - name: endpointName
+    type: string
+
+steps:
+
+- task: AzureCLI@2
+  displayName: 'Create Endpoint'
+  inputs:
+    connectedServiceNameARM: $(serviceConnection)
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: python ado/scripts/endpoint.py -s $(subscriptionId) -rg $(resourceGroupName) -ws $(workspaceName) -e ${{ parameters.endpointName }}

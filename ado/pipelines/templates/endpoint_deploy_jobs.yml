@@ -1,0 +1,127 @@
+parameters:
+  - name: endpointName
+    type: string
+
+  - name: instanceType
+    type: string
+
+  - name: uniqueIdentifier
+    type: string
+
+  - name: scoringDirectory
+    type: string
+
+  - name: scoringScript
+    type: string
+
+  - name: integrationTestsPath
+    type: string
+
+jobs:
+
+- job: pre_deployment_job_${{ parameters.uniqueIdentifier }}
+  displayName: Pre Deployment Job
+  dependsOn:
+  - setup_environment_job
+  - setup_model_job
+  condition: |
+    and
+    (
+      in(dependencies.setup_environment_job.result, 'Succeeded', 'Skipped'),
+      in(dependencies.setup_model_job.result, 'Succeeded', 'Skipped')
+    )
+
+  steps:
+
+  - template: python.yml
+
+  - template: deployment_names.yml
+
+    parameters:
+      endpointName: ${{ parameters.endpointName }}
+
+- job: deployment_job_${{ parameters.uniqueIdentifier }}
+  displayName: Deployment Job
+  dependsOn: pre_deployment_job_${{ parameters.uniqueIdentifier }}
+  condition: succeeded('pre_deployment_job_${{ parameters.uniqueIdentifier }}')
+
+  variables:
+    oldDeploymentName: $[ dependencies.pre_deployment_job_${{ parameters.uniqueIdentifier }}.outputs['deploymentNameTask.oldDeploymentName'] ]
+    newDeploymentName: $[ dependencies.pre_deployment_job_${{ parameters.uniqueIdentifier }}.outputs['deploymentNameTask.newDeploymentName'] ]
+
+  steps:
+
+  - script: |
+      echo 'New Deployment Name: $(newDeploymentName)'
+      echo 'Old Deployment Name: $(oldDeploymentName)'
+    displayName: 'Display Deployment Names'
+
+  - template: python.yml
+
+  - template: endpoint.yml
+
+    parameters:
+      endpointName: ${{ parameters.endpointName }}
+
+  - template: deployment.yml
+
+    parameters:
+      endpointName: ${{ parameters.endpointName }}
+      instanceType: ${{ parameters.instanceType }}
+      deploymentName: $(newDeploymentName)
+      pipelineName: 'inference'
+      scoringDirectory: ${{ parameters.scoringDirectory }}
+      scoringScript: ${{ parameters.scoringScript }}
+
+- job: integration_testing_job_${{ parameters.uniqueIdentifier }}
+  displayName: Integration Testing Job
+  dependsOn:
+  - pre_deployment_job_${{ parameters.uniqueIdentifier }}
+  - deployment_job_${{ parameters.uniqueIdentifier }}
+  condition: succeeded('deployment_job_${{ parameters.uniqueIdentifier }}')
+
+  variables:
+    oldDeploymentName: $[ dependencies.pre_deployment_job_${{ parameters.uniqueIdentifier }}.outputs['deploymentNameTask.oldDeploymentName'] ]
+    newDeploymentName: $[ dependencies.pre_deployment_job_${{ parameters.uniqueIdentifier }}.outputs['deploymentNameTask.newDeploymentName'] ]
+
+  steps:
+
+  - template: python.yml
+
+  - template: endpoint_invoke.yml
+
+    parameters:
+      endpointName: ${{ parameters.endpointName }}
+      deploymentName: $(newDeploymentName)
+      integrationTestsPath: ${{ parameters.integrationTestsPath }}
+
+- job: post_deployment_job_${{ parameters.uniqueIdentifier }}
+  displayName: Post Deployment Job
+  dependsOn:
+  - pre_deployment_job_${{ parameters.uniqueIdentifier }}
+  - integration_testing_job_${{ parameters.uniqueIdentifier }}
+  condition: succeeded('integration_testing_job_${{ parameters.uniqueIdentifier }}')
+
+  variables:
+    oldDeploymentName: $[ dependencies.pre_deployment_job_${{ parameters.uniqueIdentifier }}.outputs['deploymentNameTask.oldDeploymentName'] ]
+    newDeploymentName: $[ dependencies.pre_deployment_job_${{ parameters.uniqueIdentifier }}.outputs['deploymentNameTask.newDeploymentName'] ]
+    releaseNewDeployment: $[ dependencies.integration_testing_job_${{ parameters.uniqueIdentifier }}.outputs['endpointInvokeTask.releaseNewDeployment'] ]
+
+  steps:
+
+  - script: |
+      echo 'releaseNewDeployment: $(releaseNewDeployment)'
+    displayName: 'Display Release New Deployment'
+
+  - template: python.yml
+
+  - template: endpoint_traffic.yml
+
+    parameters:
+      endpointName: ${{ parameters.endpointName }}
+      deploymentName: $(newDeploymentName)
+
+  - template: deployment_delete.yml
+
+    parameters:
+      endpointName: ${{ parameters.endpointName }}

@@ -1,0 +1,14 @@
+steps:
+
+  - task: UsePythonVersion@0
+    displayName: "Use Python 3.9"
+    inputs:
+      versionSpec: '3.9'
+
+  - script: |
+      python -m pip install --upgrade pip
+      python -m pip install azure-ai-ml
+      python -m pip install azure-identity
+      python -m pip install azureml-fsspec
+      python -m pip install tenacity
+    displayName: 'Install Python SDK'

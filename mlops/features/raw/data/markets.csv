@@ -1,0 +1,13 @@
+market_id,market_description,market_code,language_id,language_code,language_description
+1,United Kingdom,GB,1,en-GB,English (British)
+2,Ireland,IE,1,en-GB,English (British)
+14,United States,US,2,en-US,English (US)
+3,Czech Republic,CZ,3,cs,Czech
+6,Slovakia,SK,4,sk,Slovak
+10,Netherlands,NL,6,nl,Dutch
+17,Belgium,BE,6,nl,Dutch
+4,Poland,PL,7,pl,Polish
+9,Hungary,HU,8,hu,Hungarian
+15,Italy,IT,15,it,Italian
+26,Australia,AU,21,en-AU,Australian English
+44,Romania,RO,39,ro,Romanian
